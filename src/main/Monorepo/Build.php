@@ -37,9 +37,11 @@ class Build
 {
     private $io;
 
-    public function __construct(IOInterface $io = null)
+	public function __construct(Composer $composer, IOInterface $io = null)
     {
-        $this->io = $io ?: new NullIO();
+	    $this->composer = $composer;
+	    $this->io = $io ?: new NullIO();
+
     }
 
     public function build($rootDirectory, $optimize = false, $noDevMode = false)
@@ -183,8 +185,8 @@ class Build
 
             $packages[$file->getRelativePath()] = $monorepoJson;
         }
-
-        $installedJsonFile = $rootDirectory . '/vendor/composer/installed.json';
+	$vendorDir = rtrim($this->composer->getConfig()->get('vendor-dir'), '/') . "/";
+        $installedJsonFile = $vendorDir . '/composer/installed.json';
         if (file_exists($installedJsonFile)) {
             $installed = json_decode(file_get_contents($installedJsonFile), true);
 
@@ -196,7 +198,7 @@ class Build
                 $name = $composerJson['name'];
 
                 $monorepoedComposerJson = array(
-                    'path' => 'vendor/' . $name,
+                    'path' => $vendorDir . $name,
                     'autoload' => array(),
                     'deps' => array(),
                     'bin' => array(),
@@ -243,7 +245,6 @@ class Build
                 }
             }
         }
-
         return $packages;
     }
 

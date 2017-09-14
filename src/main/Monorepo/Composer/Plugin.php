@@ -25,7 +25,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface, Capable
 
     public function activate(Composer $composer, IOInterface $io)
     {
-        $this->build = $this->build ?: new Build($io);
+	    $this->build = $this->build ?: new Build($composer, $io);
     }
 
     public static function getSubscribedEvents()
