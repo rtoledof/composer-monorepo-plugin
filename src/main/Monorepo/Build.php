@@ -95,7 +95,7 @@ class Build
                     }
 
                     $binFile = $binDir . '/' . basename($binary);
-                    symlink($rootDirectory . '/' . $binary, $binFile);
+                    symlink($binary, $binFile);
                 }
             }
         }
@@ -223,7 +223,7 @@ class Build
 
                 if (isset($composerJson['bin'])) {
                     foreach ($composerJson['bin'] as $binary) {
-                        $binary = 'vendor/' . $composerJson['name'] . '/' . $binary;
+                        $binary = $vendorDir . $composerJson['name'] . '/' . $binary;
                         if (! in_array($binary, $monorepoedComposerJson['bin'])) {
                             $monorepoedComposerJson['bin'][] = $binary;
                         }
